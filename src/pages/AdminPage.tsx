@@ -471,7 +471,7 @@ export default function AdminPage() {
             {createdTypeId != null && (
               <div className="export-success">
                 <p>
-                  Kart növü yaradıldı. Siyahını Excel/CSV olaraq endirə
+                  Kart növü yaradıldı. Barkodları mətn faylı olaraq endirə
                   bilərsiniz:
                 </p>
                 <a
@@ -479,7 +479,7 @@ export default function AdminPage() {
                   download
                   className="btn-download"
                 >
-                  Excel / CSV Endir
+                  Barkodları endir (.txt)
                 </a>
               </div>
             )}
@@ -531,157 +531,160 @@ export default function AdminPage() {
               <p>Yüklənir...</p>
             ) : (
               <div className="admin-table-wrap">
-              <table className="stats-table filials-table">
-                <thead>
-                  <tr>
-                    <th>Fillial adı</th>
-                    <th>Daxil olma kodu</th>
-                    <th>Anbardakı kart</th>
-                    <th>Əməliyyat</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filials.map((f) => (
-                    <Fragment key={f.id}>
-                      <tr>
-                        <td>{f.name}</td>
-                        <td>
-                          <code>{f.code}</code>
-                        </td>
-                        <td>{f._count?.cardsInStock ?? 0}</td>
-                        <td>
-                          <div className="filial-actions">
-                            <button
-                              type="button"
-                              className="btn-anbar-detail"
-                              onClick={() => {
-                                if (expandedFilialId === f.id) {
-                                  setExpandedFilialId(null);
-                                  return;
-                                }
-                                setExpandedFilialId(f.id);
-                                setLoadingStock(true);
-                                getFilialStock(f.id)
-                                  .then(setFilialStock)
-                                  .catch(() => setFilialStock([]))
-                                  .finally(() => setLoadingStock(false));
-                              }}
-                            >
-                              {expandedFilialId === f.id ? "Gizlət" : "Anbar"}
-                            </button>
-                            <button
-                              type="button"
-                              className="btn-edit-filial"
-                              onClick={() => startEditFilial(f)}
-                            >
-                              Düzənlə
-                            </button>
-                            <button
-                              type="button"
-                              className="btn-delete-type"
-                              onClick={() => handleDeleteFilial(f)}
-                            >
-                              Sil
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                      {editingFilialId === f.id && (
-                        <tr className="filial-edit-row">
-                          <td colSpan={4} className="filial-edit-cell">
-                            <form
-                              onSubmit={handleUpdateFilial}
-                              className="form create-type-form filial-edit-form"
-                            >
-                              <label>
-                                Fillial adı
-                                <input
-                                  type="text"
-                                  value={editingName}
-                                  onChange={(e) =>
-                                    setEditingName(e.target.value)
+                <table className="stats-table filials-table">
+                  <thead>
+                    <tr>
+                      <th>Fillial adı</th>
+                      <th>Daxil olma kodu</th>
+                      <th>Anbardakı kart</th>
+                      <th>Əməliyyat</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filials.map((f) => (
+                      <Fragment key={f.id}>
+                        <tr>
+                          <td>{f.name}</td>
+                          <td>
+                            <code>{f.code}</code>
+                          </td>
+                          <td>{f._count?.cardsInStock ?? 0}</td>
+                          <td>
+                            <div className="filial-actions">
+                              <button
+                                type="button"
+                                className="btn-anbar-detail"
+                                onClick={() => {
+                                  if (expandedFilialId === f.id) {
+                                    setExpandedFilialId(null);
+                                    return;
                                   }
-                                  placeholder="Fillial adı"
-                                />
-                              </label>
-                              <label>
-                                Daxil olma kodu
-                                <input
-                                  type="text"
-                                  value={editingCode}
-                                  onChange={(e) =>
-                                    setEditingCode(e.target.value)
-                                  }
-                                  placeholder="misal_fillial"
-                                />
-                              </label>
-                              <label>
-                                Yeni şifrə (boş buraxın dəyişməsin)
-                                <input
-                                  type="password"
-                                  value={editingPassword}
-                                  onChange={(e) =>
-                                    setEditingPassword(e.target.value)
-                                  }
-                                  placeholder="••••••••"
-                                />
-                              </label>
-                              <button type="submit" disabled={loading}>
-                                Saxla
+                                  setExpandedFilialId(f.id);
+                                  setLoadingStock(true);
+                                  getFilialStock(f.id)
+                                    .then(setFilialStock)
+                                    .catch(() => setFilialStock([]))
+                                    .finally(() => setLoadingStock(false));
+                                }}
+                              >
+                                {expandedFilialId === f.id ? "Gizlət" : "Anbar"}
                               </button>
                               <button
                                 type="button"
-                                className="btn-cancel-edit"
-                                onClick={() => {
-                                  setEditingFilialId(null);
-                                  setEditingName("");
-                                  setEditingCode("");
-                                  setEditingPassword("");
-                                  setError("");
-                                }}
+                                className="btn-edit-filial"
+                                onClick={() => startEditFilial(f)}
                               >
-                                Ləğv et
+                                Düzənlə
                               </button>
-                            </form>
+                              <button
+                                type="button"
+                                className="btn-delete-type"
+                                onClick={() => handleDeleteFilial(f)}
+                              >
+                                Sil
+                              </button>
+                            </div>
                           </td>
                         </tr>
-                      )}
-                      {expandedFilialId === f.id && (
-                        <tr key={`${f.id}-stock`} className="filial-stock-row">
-                          <td colSpan={4} className="filial-stock-cell">
-                            {loadingStock ? (
-                              <p className="stock-loading">Yüklənir...</p>
-                            ) : filialStock.length === 0 ? (
-                              <p className="stock-empty">
-                                Bu fillialın anbarında kart yoxdur.
-                              </p>
-                            ) : (
-                              <table className="stock-detail-table">
-                                <thead>
-                                  <tr>
-                                    <th>Kart növü</th>
-                                    <th>Qiymət</th>
-                                    <th>Ədəd</th>
-                                  </tr>
-                                </thead>
-                                <tbody>
-                                  {filialStock.map(({ type, quantity }) => (
-                                    <tr key={type.id}>
-                                      <td>{type.name}</td>
-                                      <td>{type.price}</td>
-                                      <td>{quantity}</td>
+                        {editingFilialId === f.id && (
+                          <tr className="filial-edit-row">
+                            <td colSpan={4} className="filial-edit-cell">
+                              <form
+                                onSubmit={handleUpdateFilial}
+                                className="form create-type-form filial-edit-form"
+                              >
+                                <label>
+                                  Fillial adı
+                                  <input
+                                    type="text"
+                                    value={editingName}
+                                    onChange={(e) =>
+                                      setEditingName(e.target.value)
+                                    }
+                                    placeholder="Fillial adı"
+                                  />
+                                </label>
+                                <label>
+                                  Daxil olma kodu
+                                  <input
+                                    type="text"
+                                    value={editingCode}
+                                    onChange={(e) =>
+                                      setEditingCode(e.target.value)
+                                    }
+                                    placeholder="misal_fillial"
+                                  />
+                                </label>
+                                <label>
+                                  Yeni şifrə (boş buraxın dəyişməsin)
+                                  <input
+                                    type="password"
+                                    value={editingPassword}
+                                    onChange={(e) =>
+                                      setEditingPassword(e.target.value)
+                                    }
+                                    placeholder="••••••••"
+                                  />
+                                </label>
+                                <button type="submit" disabled={loading}>
+                                  Saxla
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn-cancel-edit"
+                                  onClick={() => {
+                                    setEditingFilialId(null);
+                                    setEditingName("");
+                                    setEditingCode("");
+                                    setEditingPassword("");
+                                    setError("");
+                                  }}
+                                >
+                                  Ləğv et
+                                </button>
+                              </form>
+                            </td>
+                          </tr>
+                        )}
+                        {expandedFilialId === f.id && (
+                          <tr
+                            key={`${f.id}-stock`}
+                            className="filial-stock-row"
+                          >
+                            <td colSpan={4} className="filial-stock-cell">
+                              {loadingStock ? (
+                                <p className="stock-loading">Yüklənir...</p>
+                              ) : filialStock.length === 0 ? (
+                                <p className="stock-empty">
+                                  Bu fillialın anbarında kart yoxdur.
+                                </p>
+                              ) : (
+                                <table className="stock-detail-table">
+                                  <thead>
+                                    <tr>
+                                      <th>Kart növü</th>
+                                      <th>Qiymət</th>
+                                      <th>Ədəd</th>
                                     </tr>
-                                  ))}
-                                </tbody>
-                              </table>
-                            )}
-                          </td>
-                        </tr>
-                      )}
-                    </Fragment>
-                  ))}
-                </tbody>
-              </table>
+                                  </thead>
+                                  <tbody>
+                                    {filialStock.map(({ type, quantity }) => (
+                                      <tr key={type.id}>
+                                        <td>{type.name}</td>
+                                        <td>{type.price}</td>
+                                        <td>{quantity}</td>
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              )}
+                            </td>
+                          </tr>
+                        )}
+                      </Fragment>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
             {!loading && filials.length === 0 && <p>Hələ fillial yoxdur.</p>}
@@ -697,26 +700,26 @@ export default function AdminPage() {
               <p>Yüklənir...</p>
             ) : (
               <div className="admin-table-wrap">
-              <table className="stats-table">
-                <thead>
-                  <tr>
-                    <th>Kart növü</th>
-                    <th>Qiymət</th>
-                    <th>Mövcud ədəd</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {centralStock
-                    .filter(({ type }) => type.name !== "Varsayılan")
-                    .map(({ type, quantity }) => (
-                      <tr key={type.id}>
-                        <td>{type.name}</td>
-                        <td>{type.price}</td>
-                        <td>{quantity}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
+                <table className="stats-table">
+                  <thead>
+                    <tr>
+                      <th>Kart növü</th>
+                      <th>Qiymət</th>
+                      <th>Mövcud ədəd</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {centralStock
+                      .filter(({ type }) => type.name !== "Varsayılan")
+                      .map(({ type, quantity }) => (
+                        <tr key={type.id}>
+                          <td>{type.name}</td>
+                          <td>{type.price}</td>
+                          <td>{quantity}</td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
               </div>
             )}
             <h3>Köçürmə: Mərkəz anbar → Fillial (barkod ilə)</h3>
@@ -826,7 +829,7 @@ export default function AdminPage() {
                 <div className="types-list">
                   <p className="section-label">
                     Kart növünə klikləyin (istifadə olunan / olunmayan kartlar
-                    və Excel endirmə):
+                    və barkod endirmə):
                   </p>
                   {types.map((t) => (
                     <div
@@ -885,7 +888,7 @@ export default function AdminPage() {
                       download
                       className="btn-download small"
                     >
-                      Excel / CSV Endir
+                      Barkodları endir (.txt)
                     </a>
                     <div className="filter">
                       <button
@@ -1060,52 +1063,52 @@ export default function AdminPage() {
               <>
                 <h3>Fillial üzrə istifadə</h3>
                 <div className="admin-table-wrap">
-                <table className="stats-table">
-                  <thead>
-                    <tr>
-                      <th>Fillial</th>
-                      <th>Ümumi istifadə</th>
-                      <th>Kart növü paylanması</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.entries(stats.byFilial).map(([filial, data]) => (
-                      <tr key={filial}>
-                        <td>{filial}</td>
-                        <td>{data.count}</td>
-                        <td>
-                          {Object.entries(data.cards)
-                            .map(([card, n]) => `${card}: ${n}`)
-                            .join(", ") || "–"}
-                        </td>
+                  <table className="stats-table">
+                    <thead>
+                      <tr>
+                        <th>Fillial</th>
+                        <th>Ümumi istifadə</th>
+                        <th>Kart növü paylanması</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {Object.entries(stats.byFilial).map(([filial, data]) => (
+                        <tr key={filial}>
+                          <td>{filial}</td>
+                          <td>{data.count}</td>
+                          <td>
+                            {Object.entries(data.cards)
+                              .map(([card, n]) => `${card}: ${n}`)
+                              .join(", ") || "–"}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
                 {Object.keys(stats.byFilial).length === 0 && (
                   <p>Hələ istifadə yoxdur.</p>
                 )}
                 <h3>Kart növü üzrə istifadə</h3>
                 <div className="admin-table-wrap">
-                <table className="stats-table">
-                  <thead>
-                    <tr>
-                      <th>Kart növü</th>
-                      <th>Qiymət</th>
-                      <th>İstifadə sayı</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Object.entries(stats.byCard).map(([card, data]) => (
-                      <tr key={card}>
-                        <td>{card}</td>
-                        <td>{data.price}</td>
-                        <td>{data.count}</td>
+                  <table className="stats-table">
+                    <thead>
+                      <tr>
+                        <th>Kart növü</th>
+                        <th>Qiymət</th>
+                        <th>İstifadə sayı</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {Object.entries(stats.byCard).map(([card, data]) => (
+                        <tr key={card}>
+                          <td>{card}</td>
+                          <td>{data.price}</td>
+                          <td>{data.count}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
                 {Object.keys(stats.byCard).length === 0 && (
                   <p>Hələ istifadə yoxdur.</p>
