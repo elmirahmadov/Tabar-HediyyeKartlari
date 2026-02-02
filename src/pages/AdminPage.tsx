@@ -530,6 +530,7 @@ export default function AdminPage() {
             {loading && filials.length === 0 ? (
               <p>Yüklənir...</p>
             ) : (
+              <div className="admin-table-wrap">
               <table className="stats-table filials-table">
                 <thead>
                   <tr>
@@ -681,6 +682,7 @@ export default function AdminPage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
             {!loading && filials.length === 0 && <p>Hələ fillial yoxdur.</p>}
           </div>
@@ -694,6 +696,7 @@ export default function AdminPage() {
             {loading && centralStock.length === 0 ? (
               <p>Yüklənir...</p>
             ) : (
+              <div className="admin-table-wrap">
               <table className="stats-table">
                 <thead>
                   <tr>
@@ -714,6 +717,7 @@ export default function AdminPage() {
                     ))}
                 </tbody>
               </table>
+              </div>
             )}
             <h3>Köçürmə: Mərkəz anbar → Fillial (barkod ilə)</h3>
             <p className="section-label">
@@ -1055,6 +1059,7 @@ export default function AdminPage() {
             ) : stats ? (
               <>
                 <h3>Fillial üzrə istifadə</h3>
+                <div className="admin-table-wrap">
                 <table className="stats-table">
                   <thead>
                     <tr>
@@ -1077,10 +1082,12 @@ export default function AdminPage() {
                     ))}
                   </tbody>
                 </table>
+                </div>
                 {Object.keys(stats.byFilial).length === 0 && (
                   <p>Hələ istifadə yoxdur.</p>
                 )}
                 <h3>Kart növü üzrə istifadə</h3>
+                <div className="admin-table-wrap">
                 <table className="stats-table">
                   <thead>
                     <tr>
@@ -1099,6 +1106,7 @@ export default function AdminPage() {
                     ))}
                   </tbody>
                 </table>
+                </div>
                 {Object.keys(stats.byCard).length === 0 && (
                   <p>Hələ istifadə yoxdur.</p>
                 )}

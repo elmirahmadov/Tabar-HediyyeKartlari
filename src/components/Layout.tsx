@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 export type SidebarItem = { id: string; label: string };
@@ -22,11 +22,33 @@ export default function Layout({
   headerRight,
   sidebarFooter,
 }: LayoutProps) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleSidebarItemClick = (id: string) => {
+    onSelect(id);
+    setSidebarOpen(false);
+  };
+
   return (
-    <div className="app-layout">
+    <div className={`app-layout ${sidebarOpen ? "sidebar-open" : ""}`}>
       <header className="app-header">
         <div className="app-header-inner">
-          <Link to="/" className="app-logo">
+          {sidebarItems.length > 0 && (
+            <button
+              type="button"
+              className="app-sidebar-toggle"
+              onClick={() => setSidebarOpen((o) => !o)}
+              aria-label="Menü"
+              aria-expanded={sidebarOpen}
+            >
+              <span className="app-sidebar-toggle-icon" />
+            </button>
+          )}
+          <Link
+            to="/"
+            className="app-logo"
+            onClick={() => setSidebarOpen(false)}
+          >
             Tabar
           </Link>
           {title ? <h1 className="app-title">{title}</h1> : null}
@@ -34,25 +56,32 @@ export default function Layout({
         </div>
       </header>
       {sidebarItems.length > 0 && (
-        <aside className="app-sidebar">
-          <nav className="app-sidebar-nav">
-            {sidebarItems.map((item) => (
-              <button
-                type="button"
-                key={item.id}
-                className={`app-sidebar-item ${
-                  activeId === item.id ? "active" : ""
-                }`}
-                onClick={() => onSelect(item.id)}
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-          {sidebarFooter && (
-            <div className="app-sidebar-footer">{sidebarFooter}</div>
-          )}
-        </aside>
+        <>
+          <div
+            className="app-sidebar-overlay"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+          <aside className="app-sidebar">
+            <nav className="app-sidebar-nav">
+              {sidebarItems.map((item) => (
+                <button
+                  type="button"
+                  key={item.id}
+                  className={`app-sidebar-item ${
+                    activeId === item.id ? "active" : ""
+                  }`}
+                  onClick={() => handleSidebarItemClick(item.id)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+            {sidebarFooter && (
+              <div className="app-sidebar-footer">{sidebarFooter}</div>
+            )}
+          </aside>
+        </>
       )}
       <main className="app-main">{children}</main>
     </div>

@@ -35,6 +35,8 @@ body {
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 #app {
@@ -47,6 +49,8 @@ body {
   grid-template-rows: auto 1fr;
   grid-template-columns: auto 1fr;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
 }
 
 .app-header {
@@ -139,6 +143,46 @@ body {
   color: #fff;
 }
 
+/* Hamburger: mobilde görünür */
+.app-sidebar-toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  margin: 0 -0.5rem 0 0;
+  background: transparent;
+  border: none;
+  color: var(--header-text);
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+}
+
+.app-sidebar-toggle:hover {
+  background: var(--sidebar-hover);
+}
+
+.app-sidebar-toggle-icon {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
+}
+
+.app-sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 98;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
 .app-sidebar {
   width: 240px;
   background: var(--sidebar-bg);
@@ -209,15 +253,20 @@ body {
   padding: 1.5rem 2rem;
   overflow-x: auto;
   background: var(--bg);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* ===== Page content ===== */
 .page {
   max-width: 960px;
+  width: 100%;
   background: var(--surface);
   border-radius: var(--radius);
   padding: 1.5rem;
   box-shadow: var(--shadow);
+  box-sizing: border-box;
 }
 
 .page h1 {
@@ -635,6 +684,16 @@ td code {
 /* ===== Admin ===== */
 .admin-section {
   margin-top: 0.5rem;
+}
+
+.admin-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -0.25rem 1rem;
+}
+
+.admin-table-wrap table {
+  min-width: 0;
 }
 
 .section-label {
@@ -1180,13 +1239,430 @@ td code {
 .use-form {
   flex-direction: column;
   max-width: 360px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.filial-sale {
+  width: 100%;
+  max-width: 100%;
 }
 
 .use-form label input {
   min-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .filials-table th,
 .filials-table td {
   padding: 0.65rem 0.9rem;
+}
+
+/* ===== Responsive: Tablet ===== */
+@media (max-width: 992px) {
+  .app-main {
+    padding: 1rem 1.25rem;
+  }
+
+  .page {
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .stats-cards {
+    gap: 0.75rem;
+  }
+
+  .stat-card {
+    min-width: 120px;
+    padding: 0.9rem 1.25rem;
+  }
+
+  .create-type-form {
+    grid-template-columns: 1fr;
+  }
+
+  .barcode-input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .barcode-single-input {
+    min-width: 0;
+  }
+
+  .transfer-basket {
+    max-width: 100%;
+  }
+
+  .filial-actions {
+    flex-wrap: wrap;
+  }
+
+  .admin-page .admin-section {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .admin-page .create-type-form {
+    max-width: 100%;
+  }
+}
+
+/* ===== Responsive: Mobile ===== */
+@media (max-width: 768px) {
+  .app-sidebar-toggle {
+    display: flex;
+  }
+
+  .app-sidebar-overlay {
+    display: block;
+  }
+
+  .app-layout.sidebar-open .app-sidebar-overlay {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 99;
+    width: 280px;
+    max-width: 85vw;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease-out;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .app-layout.sidebar-open .app-sidebar {
+    transform: translateX(0);
+  }
+
+  .app-header {
+    padding: 0 1rem;
+  }
+
+  .app-title {
+    font-size: 1rem;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .app-header-filial-name {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .app-main {
+    padding: 0.5rem 0.75rem;
+    margin-left: 0;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .page.filial-dashboard {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .app-main:has(.login-page) {
+    min-height: calc(100vh - 56px);
+    padding: 1rem;
+  }
+
+  .page {
+    padding: 0.5rem 0.75rem;
+    max-width: 100%;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+
+  .filial-dashboard .page,
+  .admin-page {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .admin-page {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .admin-page .admin-section h3 {
+    font-size: 1.1rem;
+  }
+
+  .admin-table-wrap {
+    margin-left: -0.75rem;
+    margin-right: -0.75rem;
+    padding: 0 0.25rem;
+  }
+
+  .admin-table-wrap table,
+  .admin-page .filials-table {
+    min-width: 480px;
+  }
+
+  .admin-page .export-success {
+    padding: 1rem;
+  }
+
+  .admin-page .btn-download {
+    width: 100%;
+    text-align: center;
+  }
+
+  .admin-page .type-detail {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+
+  .admin-page .filter {
+    flex-direction: column;
+  }
+
+  .admin-page .filter button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .admin-page .stock-detail-table {
+    font-size: 0.85rem;
+  }
+
+  .admin-page .stock-detail-table th,
+  .admin-page .stock-detail-table td {
+    padding: 0.35rem 0.5rem;
+  }
+
+  .admin-page .filial-edit-cell {
+    padding: 0.75rem;
+  }
+
+  .filial-sale .use-form,
+  .use-form {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .page h1,
+  .filial-stats h2,
+  .filial-sale h2,
+  .filial-history h2 {
+    font-size: 1.2rem;
+  }
+
+  .stats-cards {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .stat-card {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .stat-card .stat-value {
+    font-size: 1.35rem;
+  }
+
+  .filter {
+    flex-wrap: wrap;
+  }
+
+  .filter button {
+    flex: 1;
+    min-width: 80px;
+  }
+
+  table {
+    font-size: 0.85rem;
+  }
+
+  th,
+  td {
+    padding: 0.5rem 0.6rem;
+  }
+
+  .card-list {
+    margin: 0 -0.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .card-list table {
+    min-width: 600px;
+  }
+
+  .login-card {
+    padding: 1.5rem;
+    max-width: 100%;
+  }
+
+  .login-title {
+    font-size: 1.35rem;
+  }
+
+  .login-input {
+    min-width: 0;
+  }
+
+  .login-submit {
+    width: 100%;
+  }
+
+  .form {
+    flex-wrap: wrap;
+  }
+
+  .form label,
+  .input-select-wrap {
+    min-width: 0;
+    flex: 1 1 100%;
+  }
+
+  .form input,
+  .input-select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .create-type-form {
+    grid-template-columns: 1fr;
+  }
+
+  .transfer-by-barcode-form .input-select-wrap {
+    width: 100%;
+  }
+
+  .btn-add-barcode {
+    width: 100%;
+  }
+
+  .basket-list {
+    max-height: 160px;
+  }
+
+  .btn-transfer-complete {
+    width: 100%;
+  }
+
+  .type-item {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .type-name {
+    flex: 1 1 100%;
+  }
+
+  .btn-delete-type {
+    margin-left: 0;
+  }
+
+  .filial-edit-form {
+    flex-direction: column;
+  }
+
+  .filial-edit-form button,
+  .filial-edit-form .btn-cancel-edit {
+    width: 100%;
+  }
+
+  .stock-donut-wrap .donut-chart {
+    width: 180px;
+    height: 180px;
+  }
+
+  .donut-hole {
+    width: 100px;
+    height: 100px;
+  }
+
+  .donut-legend {
+    gap: 0.5rem 1rem;
+  }
+}
+
+/* ===== Responsive: Small mobile ===== */
+@media (max-width: 480px) {
+  .app-sidebar {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .app-main {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .page.filial-dashboard,
+  .page {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .admin-page {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .admin-table-wrap {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+
+  .admin-page .filial-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-page .filial-actions button {
+    width: 100%;
+  }
+
+  .admin-page .btn-download.small {
+    width: 100%;
+  }
+
+  .app-header-right {
+    gap: 0.5rem;
+  }
+
+  .app-header-link {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .btn-logout-small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .login-card {
+    padding: 1.25rem;
+  }
+
+  .login-card-header {
+    margin-bottom: 1.25rem;
+  }
+
+  .stats-table,
+  .filials-table {
+    font-size: 0.8rem;
+  }
+
+  .stock-types-table-wrap h3,
+  .type-detail h3 {
+    font-size: 0.95rem;
+  }
 }
